@@ -15,5 +15,7 @@ namespace Level6Resellers.BusinessLogic.Interfaces
         Task<IEnumerable<ProductResellerCustomerDto>> GetProductResellerCustomersByResellerIdAsync(int resellerId);
 
         Task<IEnumerable<ProductResellerCustomerDto>> GetProductResellerCustomersByCustomerIdAsync(string customerId);
+
+        Task<ProductResellerCustomerDto> GetProductResellerCustomerAsync(int resellerId, string customerId, int productId);
     }
 }

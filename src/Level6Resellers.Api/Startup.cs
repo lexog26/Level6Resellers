@@ -144,7 +144,7 @@ namespace Level6Resellers.Api
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IProductResellerCustomerService, ProductResellerCustomerService>();
             services.AddScoped<IUserCustomerService, UserCustomerService>();
-
+            services.AddScoped<IPurchaseService, PurchaseService>();
 
             services.AddControllers();
         }

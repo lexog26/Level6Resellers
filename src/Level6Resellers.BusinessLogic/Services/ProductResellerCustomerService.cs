@@ -55,18 +55,31 @@ namespace Level6Resellers.BusinessLogic.Services
             var resellerCustomer = await GetResellerCustomerAsync(dto.ResellerId, dto.CustomerId);
             if (resellerCustomer != null)
             {
-                return await base.CreateAsync(new ProductResellerCustomerInputDto
+                if ((await _repository.GetCountAsync<ProductResellerCustomer>(x => x.ProductId == dto.ProductId &&
+                                                                             x.ResellerCustomerId == resellerCustomer.Id)) == 0)
                 {
-                    CustomerId = dto.CustomerId,
-                    ProductId = dto.ProductId,
-                    ResellerId = dto.ResellerId,
-                    ResellerCustomerId = resellerCustomer.Id
-                });
+                    return await base.CreateAsync(new ProductResellerCustomerInputDto
+                    {
+                        CustomerId = dto.CustomerId,
+                        ProductId = dto.ProductId,
+                        ResellerId = dto.ResellerId,
+                        ResellerCustomerId = resellerCustomer.Id
+                    });
+                }
+                throw new Exception("Relation product-customer already exists");
             }
             throw new KeyNotFoundException("Relation reseller-customer doesn't exist");
         }
 
-        protected async Task<IEnumerable<ProductResellerCustomerDto>>GetDtosByFilter(Expression<Func<ProductResellerCustomer, bool>> filter)
+        public async Task<ProductResellerCustomerDto> GetProductResellerCustomerAsync(int resellerId, string customerId, int productId)
+        {
+            return _mapper.Map<ProductResellerCustomerDto>(
+                await _repository.GetFirstOrDefaultAsync<ProductResellerCustomer>(
+                    filter: x => x.CustomerId == customerId && x.ResellerId == resellerId && x.ProductId == productId
+                ));
+        }
+
+        protected async Task<IEnumerable<ProductResellerCustomerDto>> GetDtosByFilter(Expression<Func<ProductResellerCustomer, bool>> filter)
         {
             return _mapper.Map<IEnumerable<ProductResellerCustomerDto>>(
                 await _repository.GetByFilterAsync(filter: filter)
@@ -77,5 +90,7 @@ namespace Level6Resellers.BusinessLogic.Services
         {
             return await _resellerCustomerService.GetByResellerCustomerAsync(resellerId, customerId);
         }
+
+        
     }
 }

@@ -27,7 +27,6 @@ namespace Level6Resellers.BusinessLogic.Configurations.Mapper
                 .ForMember(dto => dto.PurchaseIds, map => map.MapFrom(org => org.Purchases.Select(x => x.Id)))
                 .ForMember(dto => dto.UserIds, map => map.MapFrom(org => org.Users.Select(x => x.Id)))
                 .ForMember(dto => dto.ProductIds, map => map.MapFrom(org => org.ProductResellerCustomers.Select(x => x.ProductId)))
-                .ForMember(dto => dto.ResellerIds, map => map.MapFrom(org => org.ResellerCustomers.Select(x => x.ResellerCompanyId)))
                 .ReverseMap();
 
             //CustomerCompany to CustomerCompanyInputDto, CustomerCompanyInputDto to CustomerCompany
@@ -72,7 +71,6 @@ namespace Level6Resellers.BusinessLogic.Configurations.Mapper
 
             //UserCustomer to UserCustomerDto, UserCustomerDto to UserCustomer
             CreateMap<UserCustomer, UserCustomerDto>()
-                .ForMember(dto => dto.PurchaseIds, map => map.MapFrom(org => org.Purchases.Select(x => x.Id)))
                 .ReverseMap();
 
             //UserCustomer to UserCustomerInputDto, UserCustomerInputDto to UserCustomer
@@ -83,6 +81,9 @@ namespace Level6Resellers.BusinessLogic.Configurations.Mapper
             CreateMap<Purchase, PurchaseDto>()
                 .ReverseMap();
 
+            //Purchase to PurchaseInputDto, PurchaseInputDto to Purchase
+            CreateMap<Purchase, PurchaseInputDto>()
+                .ReverseMap();
 
         }
     }

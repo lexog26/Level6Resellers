@@ -10,9 +10,6 @@ namespace Level6Resellers.DataTransferObjects.Companies
         [JsonProperty(PropertyName = "name")]
         public string Name { get; set; }
 
-        [JsonProperty(PropertyName = "resellers")]
-        public IEnumerable<int> ResellerIds { get; set; }
-
         [JsonProperty(PropertyName = "users")]
         public IEnumerable<int> UserIds { get; set; }
 

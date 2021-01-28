@@ -38,6 +38,8 @@ namespace Level6Resellers.DataLayer.EntityConfigs
                 .WithMany(rc => rc.ProductResellerCustomers)
                 .HasForeignKey(p => p.ResellerCustomerId)
                 .OnDelete(DeleteBehavior.Cascade);
+
+            entity.HasIndex(p => new { p.ProductId, p.ResellerCustomerId }).IsUnique(true);
         }
     }
 }

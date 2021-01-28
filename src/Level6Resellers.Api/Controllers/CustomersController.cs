@@ -4,6 +4,9 @@ using System.Linq;
 using System.Threading.Tasks;
 using Level6Resellers.BusinessLogic.Interfaces;
 using Level6Resellers.DataTransferObjects.Companies;
+using Level6Resellers.DataTransferObjects.Products;
+using Level6Resellers.DataTransferObjects.Purchases;
+using Level6Resellers.DataTransferObjects.Users;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -20,10 +23,19 @@ namespace Level6Resellers.Api.Controllers
     public class CustomersController : ControllerBase
     {
         protected readonly ICustomerCompanyService _customerService;
+        protected readonly IUserCustomerService _userService;
+        protected readonly IPurchaseService _purchaseService;
+        protected readonly IProductResellerCustomerService _productResellerCustomerService;
 
-        public CustomersController(ICustomerCompanyService customerCompanyService)
+        public CustomersController(ICustomerCompanyService customerCompanyService,
+                                   IUserCustomerService userService,
+                                   IPurchaseService purchaseService,
+                                   IProductResellerCustomerService productResellerCustomerService)
         {
             _customerService = customerCompanyService;
+            _userService = userService;
+            _purchaseService = purchaseService;
+            _productResellerCustomerService = productResellerCustomerService;
         }
 
         #region Read
@@ -60,6 +72,51 @@ namespace Level6Resellers.Api.Controllers
             }
             return Ok(customer);
         }
+
+        /// <summary>
+        /// Returns customer's users
+        /// </summary>
+        /// <param name="guid">Customer's guid</param>
+        /// <returns>Customer's users</returns>
+        /// <response code="200">Customer's users</response>
+        [HttpGet("{guid}/users")]
+        [ProducesResponseType(typeof(IEnumerable<UserCustomerDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetUsersByIdAsync(string guid)
+        {
+            var users = await _userService.GetCustomerUsers(guid);
+            return Ok(users);
+        }
+
+        /// <summary>
+        /// Returns customer products
+        /// </summary>
+        /// <param name="guid">Customer's guid</param>
+        /// <returns>Customer's products</returns>
+        /// <response code="200">Customer's products</response>
+        [HttpGet("{guid}/products")]
+        [ProducesResponseType(typeof(IEnumerable<ProductResellerCustomerDto>), StatusCodes.Status200OK)]
+        public async Task<IActionResult> GetProductsByIdAsync(string guid)
+        {
+            var products = await _productResellerCustomerService.GetProductResellerCustomersByCustomerIdAsync(guid);
+            return Ok(products);
+        }
+
+        /// <summary>
+        /// Returns customer's purchases
+        /// </summary>
+        /// <param name="guid">Customer's guid</param>
+        /// <param name="since">Purchases made by the customer after this date</param>
+        /// <returns>Customer's purchases</returns>
+        /// <response code="200">Customer's purchases</response>
+        [HttpGet("{guid}/purchases")]
+        [ProducesResponseType(typeof(IEnumerable<PurchaseDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> GetCustomerPurchasesByIdAsync([FromRoute]string guid, [FromQuery] DateTime? since)
+        {
+            var purchases = await _purchaseService.GetCustomerPurchasesAsync(guid, since);
+            return Ok(purchases);
+        }
+
         #endregion
 
         #region Create
@@ -78,6 +135,33 @@ namespace Level6Resellers.Api.Controllers
             return Ok(dto);
         }
 
+        /// <summary>
+        /// Creates a new user customer
+        /// </summary>
+        /// <param name="userInputDto">User's data</param>
+        /// <returns>The user info persisted</returns>
+        /// <response code="200">The user was succesfully added</response>
+        [HttpPost("{guid}/users")]
+        [ProducesResponseType(typeof(UserCustomerDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> CreateUserAsync([FromBody] UserCustomerInputDto userInputDto)
+        {
+            var dto = await _userService.CreateAsync(userInputDto);
+            return Ok(dto);
+        }
+
+        /// <summary>
+        /// Makes a new customer purchase
+        /// </summary>
+        /// <param name="purchaseDto">Purchase data</param>
+        /// <returns>Purchase data persisted</returns>
+        /// <response code="200">Purchase succesfully added</response>
+        [HttpPost("{guid}/purchases")]
+        [ProducesResponseType(typeof(PurchaseDto), StatusCodes.Status200OK)]
+        public async Task<IActionResult> MakeCustomerPurchaseAsync([FromBody] PurchaseCreateDto purchaseDto)
+        {
+            var dto = await _purchaseService.CreateAsync(purchaseDto);
+            return Ok(dto);
+        }
 
         #endregion
 

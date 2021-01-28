@@ -5,18 +5,21 @@ using System.Text;
 
 namespace Level6Resellers.DataTransferObjects.Purchases
 {
-    public class PurchaseInputDto
+    public class PurchaseInputDto : InputDto
     {
-        [JsonProperty(PropertyName = "user_id")]
+        [JsonProperty(PropertyName = "user")]
         public int UserCustomerId { get; set; }
 
-        [JsonProperty(PropertyName = "reseller_id")]
+        [JsonProperty(PropertyName = "reseller")]
         public int ResellerId { get; set; }
 
-        [JsonProperty(PropertyName = "product_id")]
+        [JsonProperty(PropertyName = "product")]
         public int ProductId { get; set; }
 
-        [JsonProperty(PropertyName = "customer_id")]
+        [JsonProperty(PropertyName = "customer")]
         public string CustomerId { get; set; }
+
+        [JsonProperty(PropertyName = "prc")]
+        public int ProductResellerCustomerId { get; set; }
     }
 }

@@ -19,7 +19,5 @@ namespace Level6Resellers.DataTransferObjects.Users
         [JsonProperty(PropertyName = "company_id")]
         public string CustomerCompanyId { get; set; }
 
-        [JsonProperty(PropertyName = "purchases")]
-        public IEnumerable<int> PurchaseIds { get; set; }
     }
 }
