@@ -19,8 +19,4 @@
     <ProjectReference Include="..\Level6Resellers.Domain\Level6Resellers.Domain.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Migrations\" />
-  </ItemGroup>
-
 </Project>
