@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="9.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Level6Resellers.DataLayer\Level6Resellers.DataLayer.csproj" />
+    <ProjectReference Include="..\Level6Resellers.DataTransferObjects\Level6Resellers.DataTransferObjects.csproj" />
+    <ProjectReference Include="..\Level6Resellers.Domain\Level6Resellers.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
